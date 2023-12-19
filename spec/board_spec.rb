@@ -100,27 +100,27 @@ describe Board do
 
     before do
       test_board.grid = [['X', nil, nil, nil, nil, nil, nil],
-                                     ['X', nil, nil, nil, nil, nil, nil],
-                                     ['X', nil, nil, nil, nil, nil, 'X'],
-                                     ['X', nil, nil, nil, nil, nil, 'X'],
-                                     ['X', nil, nil, nil, nil, nil, 'X'],
-                                     ['X', nil, nil, nil, nil, nil, 'X']]
-    end
+                        ['X', nil, nil, nil, nil, nil, nil],
+                        ['X', nil, nil, nil, nil, nil, 'X'],
+                        ['X', nil, nil, nil, nil, nil, 'X'],
+                        ['X', nil, nil, nil, nil, nil, 'X'],
+                        ['X', nil, nil, nil, nil, nil, 'X']]
+end
 
     context "When there is a sequence of four in the given column" do
       it "returns true" do
-        expect(test_board.column_win?(0,"X")).to be(true)
+        expect(test_board.column_win?(0,10,"X")).to be(true)
       end
     end
 
     context "When there is not a sequence of four in the given column" do
       it "returns false" do
-        expect(test_board.column_win?(2,"X")).to be(false)
+        expect(test_board.column_win?(2,10,"X")).to be(false)
       end
     end
   end
 
-  describe "#row_win" do
+  describe "#row_win?" do
   subject(:test_board) { described_class.new }
 
   before do
@@ -134,15 +134,28 @@ describe Board do
 
     context "When there is a sequence of four in the given row" do
       it "returns true" do
-        expect(test_board.row_win?(1,"X")).to be(true)
+        expect(test_board.row_win?(10,1,"X")).to be(true)
       end
     end
 
     context "When there is not a sequence of four in the given row" do
       it "returns false" do
-        expect(test_board.row_win?(2,"X")).to be(false)
+        expect(test_board.row_win?(10,2,"X")).to be(false)
       end
     end
+  end
+
+  describe "#diagonal_win?" do
+    context "When there is a winning diagonal combination" do
+      xit "returns true" do
+      end
+    end
+
+    context "When there is not a winning diagonal combination" do
+      xit "returns false" do
+      end
+    end
+
   end
 
 
