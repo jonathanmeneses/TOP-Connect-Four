@@ -37,7 +37,7 @@ describe Board do
       end
     end
 
-    context 'When an not full column is picked' do
+    context 'When an ot full column is picked' do
       context 'that is empty' do
         it 'returns false' do
           expect(partially_filled_board.full_column?(1)).to be false
@@ -94,4 +94,56 @@ describe Board do
       end
     end
   end
+
+  describe "#column_win?" do
+    subject(:test_board) { described_class.new }
+
+    before do
+      test_board.grid = [['X', nil, nil, nil, nil, nil, nil],
+                                     ['X', nil, nil, nil, nil, nil, nil],
+                                     ['X', nil, nil, nil, nil, nil, 'X'],
+                                     ['X', nil, nil, nil, nil, nil, 'X'],
+                                     ['X', nil, nil, nil, nil, nil, 'X'],
+                                     ['X', nil, nil, nil, nil, nil, 'X']]
+    end
+
+    context "When there is a sequence of four in the given column" do
+      it "returns true" do
+        expect(test_board.column_win?(0,"X")).to be(true)
+      end
+    end
+
+    context "When there is not a sequence of four in the given column" do
+      it "returns false" do
+        expect(test_board.column_win?(2,"X")).to be(false)
+      end
+    end
+  end
+
+  describe "#row_win" do
+  subject(:test_board) { described_class.new }
+
+  before do
+    test_board.grid = [['X', nil, nil, nil, nil, nil, nil],
+                                   ['X', "X", "X", "X", nil, nil, nil],
+                                   ['X', nil, nil, nil, nil, nil, 'X'],
+                                   [nil, nil, nil, nil, nil, nil, 'X'],
+                                   [nil, nil, nil, nil, nil, nil, 'X'],
+                                   [nil, nil, nil, nil, nil, nil, 'X']]
+    end
+
+    context "When there is a sequence of four in the given row" do
+      it "returns true" do
+        expect(test_board.row_win?(1,"X")).to be(true)
+      end
+    end
+
+    context "When there is not a sequence of four in the given row" do
+      it "returns false" do
+        expect(test_board.row_win?(2,"X")).to be(false)
+      end
+    end
+  end
+
+
 end
