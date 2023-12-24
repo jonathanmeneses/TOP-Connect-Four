@@ -159,32 +159,54 @@ end
       end
     context "When create_diagonals is called" do
 
-     xit "returns 24 arrays" do
-        test_board.
+     it "returns 24 arrays" do
+        expect(test_board.create_diagonals.length).to eq(24)
       end
     end
 
   end
 
   describe "#diagonal_win?" do
+    subject(:test_board) { described_class.new}
 
-    context "When there is a winning diagonal combination" do
-      xit "returns true" do
-      end
-    end
+    context "When there is a winning combination" do
 
-    context "When there is a winning anti-diagonal combination" do
-      xit "returns true" do
+      return_arrays = [["X", nil, nil, nil], ["X", nil, "X", nil], ["X", nil, nil, nil], ["X", nil, nil, nil],
+                         ["X", nil, nil, nil], ["X", "X", "X", "X"], [nil, nil, "X", nil], [nil, nil, nil, nil],
+                         [nil, "X", nil, nil], [nil, nil, nil, nil], ["X", "X", "X", nil], [nil, nil, nil, nil],
+                         [nil, nil, nil, "X"], [nil, "X", nil, "X"], [nil, nil, nil, "X"], ["X", "X", nil, nil],
+                         [nil, nil, nil, nil], [nil, nil, nil, nil], [nil, nil, nil, "X"], [nil, nil, "X", "X"],
+                         ["X", nil, "X", "X"], [nil, nil, nil, nil], [nil, nil, nil, nil], [nil, nil, "X", "X"]]
+
+      it "returns true" do
+        allow(test_board).to receive(:create_diagonals).and_return(return_arrays)
+        expect(test_board.diagonal_win?('X')).to be(true)
       end
     end
 
     context "When there is not a winning combination" do
-      xit "returns false" do
+      return_arrays =   [["X", nil, nil, nil], ["X", nil, "X", nil], ["X", nil, nil, nil], ["X", nil, nil, nil],
+                         ["X", nil, nil, nil], ["X", nil, "X", "X"], [nil, nil, "X", nil], [nil, nil, nil, nil],
+                         [nil, "X", nil, nil], [nil, nil, nil, nil], ["X", "X", "X", nil], [nil, nil, nil, nil],
+                         [nil, nil, nil, "X"], [nil, "X", nil, "X"], [nil, nil, nil, "X"], ["X", "X", nil, nil],
+                         [nil, nil, nil, nil], [nil, nil, nil, nil], [nil, nil, nil, "X"], [nil, nil, "X", "X"],
+                         ["X", nil, "X", "X"], [nil, nil, nil, nil], [nil, nil, nil, nil], [nil, nil, "X", "X"]]
+      it "returns false" do
+        allow(test_board).to receive(:create_diagonals).and_return(return_arrays)
+        expect(test_board.diagonal_win?('X')).to be(false)
       end
     end
 
     context "When there is a winning combination, but not with the passed symbol" do
-      xit "returns false" do
+      return_arrays = [["X", nil, nil, nil], ["X", nil, "X", nil], ["X", nil, nil, nil], ["X", nil, nil, nil],
+                         ["X", nil, nil, nil], ["X", "X", "X", "X"], [nil, nil, "X", nil], [nil, nil, nil, nil],
+                         [nil, "X", nil, nil], [nil, nil, nil, nil], ["X", "X", "X", nil], [nil, nil, nil, nil],
+                         [nil, nil, nil, "X"], [nil, "O", nil, "O"], [nil, nil, nil, "X"], ["X", "X", nil, nil],
+                         [nil, nil, nil, nil], [nil, nil, nil, nil], [nil, nil, nil, "X"], [nil, nil, "X", "X"],
+                         ["X", nil, "X", "X"], [nil, nil, nil, nil], [nil, nil, nil, nil], [nil, nil, "X", "X"]]
+      it "returns false" do
+        allow(test_board).to receive(:create_diagonals).and_return(return_arrays)
+        expect(test_board.diagonal_win?('O')).to be(false)
       end
     end
 
@@ -192,6 +214,52 @@ end
 
   end
 
+  describe "#place_move" do
+
+    subject(:test_board) { described_class.new }
+
+    before do
+      test_board.grid =           [ ['X', nil, nil, nil, nil, nil, 'X'],
+                                    ['X', "X", "X", nil, nil, nil, 'X'],
+                                    ['X', nil, nil, nil, nil, nil, 'X'],
+                                    [nil, nil, nil, nil, nil, nil, 'X'],
+                                    [nil, nil, nil, nil, nil, nil, 'X'],
+                                    [nil, nil, nil, "X", nil, nil, 'X']]
+    end
+
+    context "When a move is placed in an empty column" do
+      it "move is placed to the bottom of the column" do
+        expect {test_board.place_move(5,"0")}
+          .to change {test_board.grid[5][5]}
+            .from(nil)
+              .to("0")
+      end
+    end
+
+    context "when a move is placed in a partially full column" do
+      it "move is placed at the last not filled row" do
+        expect {test_board.place_move(3,"0")}
+          .to change {test_board.grid[4][3]}
+            .from(nil)
+              .to("0")
+      end
+    end
+
+    context "When move is placed in a full column" do
+      it "returns error" do
+        expect {test_board.place_move(6,"0")}
+        .to raise_error(RangeError)
+      end
+    end
+
+    context "When move is placed in an invalid column" do
+      it "returns error" do
+        expect {test_board.place_move(9,"0")}
+        .to raise_error(RangeError)
+      end
+    end
+
+  end
 
 
 

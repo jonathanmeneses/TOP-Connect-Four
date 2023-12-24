@@ -46,11 +46,11 @@ class Board
     end
   end
 
-  def diagonal_win?(column, row, player)
+  def diagonal_win?(player)
 
-    #call create_diagonals)
+    diagonals = create_diagonals
 
-    #check if any diagonals are all "player"
+    diagonals.any? {|array| array.all? {|x| x==player}}
 
   end
 
@@ -58,13 +58,14 @@ class Board
 
     potential_winning_arrays = []
     (0..(grid[0].length - 4)).each do |col_start|
-      (0..(grid.length - 4)).each do |row_start|
+      (0..(grid.length - 1)).each do |row_start|
         # this pulls the set of arrays that could be winning combinations from a "diagonal" perspective
-        array_to_add = []
-        4.times {|i| array_to_add << grid[row_start+i][col_start+i]}
-        potential_winning_arrays << array_to_add
+        if row_start < 3
+          array_to_add = []
+          4.times {|i| array_to_add << grid[row_start+i][col_start+i]}
+          potential_winning_arrays << array_to_add
 
-        if row_start >= 3
+        elsif row_start >= 3
           antidiagonal_to_add = []
           # this pulls the set of arrays that could be winning combinations from an "anti-diagonal" perspective
           4.times {|i| antidiagonal_to_add << grid[row_start-i][col_start+i]}
@@ -73,6 +74,21 @@ class Board
       end
     end
      potential_winning_arrays
+  end
+
+  def place_move(column,player)
+
+    unless valid_column?(column)
+      raise RangeError, "Invalid Column Selection"
+    end
+      # Start from the bottom of the grid and go upwards
+      grid.reverse_each do |row|
+        if row[column].nil?
+          row[column] = player
+          break  # Exit the loop after replacing the value
+        end
+      end
+    player
   end
 
 
