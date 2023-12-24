@@ -145,18 +145,54 @@ end
     end
   end
 
+  describe "#create_diagonals?" do
+    subject(:test_board) { described_class.new }
+
+    before do
+      test_board.grid =
+      [ [nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, "X"],
+        [nil, nil, nil, nil, "O", "X", "O"],
+        [nil, nil, nil, nil, "X", "O", "O"],
+        [nil, "O", "O", "X", "O", "O", "O"]]
+      end
+    context "When create_diagonals is called" do
+
+     xit "returns 24 arrays" do
+        test_board.
+      end
+    end
+
+  end
+
   describe "#diagonal_win?" do
+
     context "When there is a winning diagonal combination" do
       xit "returns true" do
       end
     end
 
-    context "When there is not a winning diagonal combination" do
+    context "When there is a winning anti-diagonal combination" do
+      xit "returns true" do
+      end
+    end
+
+    context "When there is not a winning combination" do
       xit "returns false" do
       end
     end
 
+    context "When there is a winning combination, but not with the passed symbol" do
+      xit "returns false" do
+      end
+    end
+
+
+
   end
+
+
 
 
 end
