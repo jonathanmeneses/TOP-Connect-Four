@@ -96,56 +96,65 @@ describe Board do
 
   describe '#column_win?' do
     subject(:test_board) { described_class.new }
-
-    before do
-      test_board.grid = [['X', nil, nil, nil, nil, nil, nil],
-                         ['X', nil, nil, nil, nil, nil, nil],
-                         ['X', nil, nil, nil, nil, nil, 'X'],
-                         ['X', nil, nil, nil, nil, nil, 'X'],
-                         ['X', nil, nil, nil, nil, nil, 'X'],
-                         ['X', nil, nil, nil, nil, nil, 'X']]
-    end
+    let(:player_mock) { double('Player', symbol: 'X') }
 
     context 'When there is a sequence of four in the given column' do
       it 'returns true' do
-        expect(test_board.column_win?(0, 'X')).to be(true)
+        test_board.grid = [['X', nil, nil, nil, nil, nil, nil],
+                           ['X', nil, nil, nil, nil, nil, nil],
+                           ['X', nil, nil, nil, nil, nil, 'X'],
+                           ['X', nil, nil, nil, nil, nil, 'X'],
+                           ['X', nil, nil, nil, nil, nil, 'X'],
+                           ['X', nil, nil, nil, nil, nil, 'X']]
+        expect(test_board.column_win?(player_mock)).to be(true)
       end
     end
 
-    context 'When there is not a sequence of four in the given column' do
+    context 'When there is not a sequence of four on the board' do
       it 'returns false' do
-        expect(test_board.column_win?(2, 'X')).to be(false)
+        test_board.grid = [[nil, nil, nil, nil, nil, nil, nil],
+                           [nil, nil, nil, nil, nil, nil, nil],
+                           [nil, nil, nil, nil, nil, nil, 'X'],
+                           ['X', nil, nil, nil, nil, nil, 'X'],
+                           ['X', nil, nil, nil, nil, nil, 'X'],
+                           ['X', nil, nil, nil, nil, nil, 'O']]
+        expect(test_board.column_win?(player_mock)).to be(false)
       end
     end
   end
 
   describe '#row_win?' do
     subject(:test_board) { described_class.new }
-
-    before do
-      test_board.grid = [['X', nil, nil, nil, nil, nil, nil],
-                         ['X', 'X', 'X', 'X', nil, nil, nil],
-                         ['X', nil, nil, nil, nil, nil, 'X'],
-                         [nil, nil, nil, nil, nil, nil, 'X'],
-                         [nil, nil, nil, nil, nil, nil, 'X'],
-                         [nil, nil, nil, nil, nil, nil, 'X']]
-    end
+    let(:player_mock) { double('Player', symbol: 'X') }
 
     context 'When there is a sequence of four in the given row' do
       it 'returns true' do
-        expect(test_board.row_win?(1, 'X')).to be(true)
+        test_board.grid = [['X', nil, nil, nil, nil, nil, nil],
+                           ['X', 'X', 'X', 'X', nil, nil, nil],
+                           ['X', nil, nil, nil, nil, nil, 'X'],
+                           [nil, nil, nil, nil, nil, nil, 'X'],
+                           [nil, nil, nil, nil, nil, nil, 'X'],
+                           [nil, nil, nil, nil, nil, nil, 'X']]
+        expect(test_board.row_win?(player_mock)).to be(true)
       end
     end
 
-    context 'When there is not a sequence of four in the given row' do
+    context 'When there is not a sequence of four in any  row' do
       it 'returns false' do
-        expect(test_board.row_win?(2, 'X')).to be(false)
+        test_board.grid = [['X', nil, nil, nil, nil, nil, nil],
+                           ['X', 'X', 'X', 'O', nil, nil, nil],
+                           ['X', nil, nil, nil, nil, nil, 'X'],
+                           [nil, nil, nil, nil, nil, nil, 'X'],
+                           [nil, nil, nil, nil, nil, nil, 'X'],
+                           [nil, nil, nil, nil, nil, nil, 'X']]
+        expect(test_board.row_win?(player_mock)).to be(false)
       end
     end
   end
 
   describe '#create_diagonals?' do
     subject(:test_board) { described_class.new }
+    let(:player_mock) { double('Player', symbol: 'X') }
 
     before do
       test_board.grid =
@@ -165,6 +174,8 @@ describe Board do
 
   describe '#diagonal_win?' do
     subject(:test_board) { described_class.new }
+    let(:player_mock) { double('Player', symbol: 'X') }
+    let(:player_mock_o) { double('Player', symbol: 'O') }
 
     context 'When there is a winning combination' do
       return_arrays = [['X', nil, nil, nil], ['X', nil, 'X', nil], ['X', nil, nil, nil], ['X', nil, nil, nil],
@@ -176,7 +187,7 @@ describe Board do
 
       it 'returns true' do
         allow(test_board).to receive(:create_diagonals).and_return(return_arrays)
-        expect(test_board.diagonal_win?('X')).to be(true)
+        expect(test_board.diagonal_win?(player_mock)).to be(true)
       end
     end
 
@@ -189,7 +200,7 @@ describe Board do
                          ['X', nil, 'X', 'X'], [nil, nil, nil, nil], [nil, nil, nil, nil], [nil, nil, 'X', 'X']]
       it 'returns false' do
         allow(test_board).to receive(:create_diagonals).and_return(return_arrays)
-        expect(test_board.diagonal_win?('X')).to be(false)
+        expect(test_board.diagonal_win?(player_mock)).to be(false)
       end
     end
 
@@ -202,7 +213,7 @@ describe Board do
                        ['X', nil, 'X', 'X'], [nil, nil, nil, nil], [nil, nil, nil, nil], [nil, nil, 'X', 'X']]
       it 'returns false' do
         allow(test_board).to receive(:create_diagonals).and_return(return_arrays)
-        expect(test_board.diagonal_win?('O')).to be(false)
+        expect(test_board.diagonal_win?(player_mock_o)).to be(false)
       end
     end
   end
@@ -220,8 +231,9 @@ describe Board do
     end
 
     context 'When a move is placed in an empty column' do
+      let(:player_mock) { double('Player', symbol: '0') }
       it 'move is placed to the bottom of the column' do
-        expect { test_board.place_move(5, '0') }
+        expect { test_board.place_move(5, player_mock) }
           .to change { test_board.grid[5][5] }
           .from(nil)
           .to('0')
@@ -229,8 +241,9 @@ describe Board do
     end
 
     context 'when a move is placed in a partially full column' do
+      let(:player_mock) { double('Player', symbol: '0') }
       it 'move is placed at the last not filled row' do
-        expect { test_board.place_move(3, '0') }
+        expect { test_board.place_move(3, player_mock) }
           .to change { test_board.grid[4][3] }
           .from(nil)
           .to('0')
@@ -254,12 +267,50 @@ describe Board do
 
   describe '#winning_move?' do
     subject(:test_board) { described_class.new }
+    let(:player_mock) { double('Player', symbol: '0') }
+
     context 'when there is no winning direction' do
       it 'returns false' do
         allow(test_board).to receive(:column_win?).and_return(false)
         allow(test_board).to receive(:row_win?).and_return(false)
         allow(test_board).to receive(:diagonal_win?).and_return(false)
-        expect(test_board.winning_move?('1', '1', 'X')).to be(false)
+        expect(test_board.winning_move?(player_mock)).to be(false)
+      end
+    end
+    context 'when there is a winning direction' do
+      it 'returns true' do
+        allow(test_board).to receive(:column_win?).and_return(true)
+        allow(test_board).to receive(:row_win?).and_return(false)
+        allow(test_board).to receive(:diagonal_win?).and_return(false)
+        expect(test_board.winning_move?(player_mock)).to be(true)
+      end
+    end
+
+    context 'when there are multiple winning directions' do
+      it 'returns true' do
+        allow(test_board).to receive(:column_win?).and_return(true)
+        allow(test_board).to receive(:row_win?).and_return(true)
+        allow(test_board).to receive(:diagonal_win?).and_return(true)
+        expect(test_board.winning_move?(player_mock)).to be(true)
+      end
+    end
+  end
+
+  describe '#full_board?' do
+    subject(:test_board) { described_class.new }
+
+    before do
+      test_board.grid = [['X', nil, nil, nil, nil, nil, 'X'],
+                         ['X', 'X', 'X', nil, nil, nil, 'X'],
+                         ['X', nil, nil, nil, nil, nil, 'X'],
+                         [nil, nil, nil, nil, nil, nil, 'X'],
+                         [nil, nil, nil, nil, nil, nil, 'X'],
+                         [nil, nil, nil, 'X', nil, nil, 'X']]
+    end
+
+    context 'when the board is not full' do
+      it 'returns false' do
+        expect(test_board.full_board?).to be(false)
       end
     end
   end

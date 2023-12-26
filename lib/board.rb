@@ -17,12 +17,16 @@ class Board
     column_in_range && !full_column?(column)
   end
 
-  def winning_move?(column, row, player)
-    column_win?(column, player) || row_win?(row, player) || diagonal_win?(player)
+  def winning_move?(player)
+    column_win?(player) || row_win?(player) || diagonal_win?(player)
   end
 
   def full_column?(column)
     grid.all? { |row| !row[column].nil? }
+  end
+
+  def full_board?
+    grid.flatten.all? { |row| !row.nil? }
   end
 
   def display_board
@@ -38,19 +42,26 @@ class Board
     puts '-----------------------------'
   end
 
-  def column_win?(column, player)
-    flattened_column = grid.map { |row_check| row_check[column] }
-    flattened_column.each_cons(4).any? do |consecutive_cells|
-      consecutive_cells.all? do |x|
-        x == player
+  def column_win?(player)
+    grid[0].length.times do |col|
+      flattened_column = grid.map { |row| row[col] }
+      if flattened_column.each_cons(4).any? do |consecutive_cells|
+           consecutive_cells.all? do |cell|
+             cell == player.symbol
+           end
+         end
+        return true
       end
     end
+    false
   end
 
-  def row_win?(row, player)
-    grid[row].each_cons(4).any? do |consecutive_cells|
-      consecutive_cells.all? do |x|
-        x == player
+  def row_win?(player)
+    grid.any? do |row|
+      row.each_cons(4).any? do |consecutive_cells|
+        consecutive_cells.all? do |x|
+          x == player.symbol
+        end
       end
     end
   end
@@ -58,7 +69,7 @@ class Board
   def diagonal_win?(player)
     diagonals = create_diagonals
 
-    diagonals.any? { |array| array.all? { |x| x == player } }
+    diagonals.any? { |array| array.all? { |x| x == player.symbol } }
   end
 
   def create_diagonals
@@ -88,7 +99,7 @@ class Board
     # Start from the bottom of the grid and go upwards
     grid.reverse_each do |row|
       if row[column].nil?
-        row[column] = player
+        row[column] = player.symbol
         break # Exit the loop after replacing the value
       end
     end
