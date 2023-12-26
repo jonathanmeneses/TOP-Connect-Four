@@ -26,3 +26,14 @@ To create diagonals, you need to cover two types:
     * Similar to the previous type, but this time, start from the leftmost column of each row, beginning from the bottom row and moving up.
     * For each starting point, move diagonally up and to the right, collecting cells until you reach the top row or the rightmost column.
     * Also, start from the bottom row and move diagonally up from each column, ensuring the diagonal can contain at least 4 cells.
+
+
+### Creating the Game Class
+
+Initializing the game class will mean that we need to support the following functionality:
+
+1. Getting and setting player symbols
+2. Getting player moves and control-flowing to place them
+3. Checking for game-playing conditions
+4. Ending the game and updating with the winner
+

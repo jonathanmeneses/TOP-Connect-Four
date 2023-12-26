@@ -108,13 +108,13 @@ describe Board do
 
     context 'When there is a sequence of four in the given column' do
       it 'returns true' do
-        expect(test_board.column_win?(0, 10, 'X')).to be(true)
+        expect(test_board.column_win?(0, 'X')).to be(true)
       end
     end
 
     context 'When there is not a sequence of four in the given column' do
       it 'returns false' do
-        expect(test_board.column_win?(2, 10, 'X')).to be(false)
+        expect(test_board.column_win?(2, 'X')).to be(false)
       end
     end
   end
@@ -133,13 +133,13 @@ describe Board do
 
     context 'When there is a sequence of four in the given row' do
       it 'returns true' do
-        expect(test_board.row_win?(10, 1, 'X')).to be(true)
+        expect(test_board.row_win?(1, 'X')).to be(true)
       end
     end
 
     context 'When there is not a sequence of four in the given row' do
       it 'returns false' do
-        expect(test_board.row_win?(10, 2, 'X')).to be(false)
+        expect(test_board.row_win?(2, 'X')).to be(false)
       end
     end
   end
@@ -248,6 +248,18 @@ describe Board do
       it 'returns error' do
         expect { test_board.place_move(9, '0') }
           .to raise_error(RangeError)
+      end
+    end
+  end
+
+  describe '#winning_move?' do
+    subject(:test_board) { described_class.new }
+    context 'when there is no winning direction' do
+      it 'returns false' do
+        allow(test_board).to receive(:column_win?).and_return(false)
+        allow(test_board).to receive(:row_win?).and_return(false)
+        allow(test_board).to receive(:diagonal_win?).and_return(false)
+        expect(test_board.winning_move?('1', '1', 'X')).to be(false)
       end
     end
   end

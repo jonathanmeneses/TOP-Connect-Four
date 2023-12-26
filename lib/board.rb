@@ -11,8 +11,14 @@ class Board
   end
 
   def valid_column?(column)
+    return false if column.nil?
+
     column_in_range = column.between?(0, 6)
     column_in_range && !full_column?(column)
+  end
+
+  def winning_move?(column, row, player)
+    column_win?(column, player) || row_win?(row, player) || diagonal_win?(player)
   end
 
   def full_column?(column)
@@ -32,7 +38,7 @@ class Board
     puts '-----------------------------'
   end
 
-  def column_win?(column, _row, player)
+  def column_win?(column, player)
     flattened_column = grid.map { |row_check| row_check[column] }
     flattened_column.each_cons(4).any? do |consecutive_cells|
       consecutive_cells.all? do |x|
@@ -41,7 +47,7 @@ class Board
     end
   end
 
-  def row_win?(_column, row, player)
+  def row_win?(row, player)
     grid[row].each_cons(4).any? do |consecutive_cells|
       consecutive_cells.all? do |x|
         x == player
