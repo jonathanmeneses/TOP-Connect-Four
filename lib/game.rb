@@ -64,7 +64,6 @@ class Game
                             else
                               player_one
                             end
-      p current_player
     end
     end_sequence
   end

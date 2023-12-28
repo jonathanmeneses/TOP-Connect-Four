@@ -106,7 +106,7 @@ class Board
         row[column] = player.symbol
         placed = 1
         break
-      # binding.pry
+      # binding.pry``
     end
     player
   end
