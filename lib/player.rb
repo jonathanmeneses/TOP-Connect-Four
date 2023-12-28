@@ -12,8 +12,7 @@ class Player
   def get_move(board)
     column_move = nil
     until board.valid_column?(column_move)
-      puts "#{name}, place your move by column"
-      column_move = gets.chomp.to_i
+      column_move = (gets.chomp.to_i - 1)
     end
     column_move
   end

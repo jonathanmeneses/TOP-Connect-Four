@@ -2,12 +2,14 @@
 
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 
+require 'pry-byebug'
+
 class Board
   # Board Class to setup and initialize game.
   attr_accessor :grid
 
   def initialize
-    @grid = Array.new(6, Array.new(7, nil))
+    @grid = Array.new(6) {Array.new(7, nil)}
   end
 
   def valid_column?(column)
@@ -97,11 +99,14 @@ class Board
     raise RangeError, 'Invalid Column Selection' unless valid_column?(column)
 
     # Start from the bottom of the grid and go upwards
+    placed = 0
     grid.reverse_each do |row|
-      if row[column].nil?
+      next unless row[column].nil? && placed == 0
+
         row[column] = player.symbol
-        break # Exit the loop after replacing the value
-      end
+        placed = 1
+        break
+      # binding.pry
     end
     player
   end
